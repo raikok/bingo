@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <Slideout :touch="false" :toggleSelectors="['.toggle-button', '.another-toggle']" @on-open="logger">
+    <Slideout :touch="false" :toggleSelectors="['.toggle-button', '.another-toggle']">
       <Hello/>
     </Slideout>
   </div>
@@ -18,16 +18,17 @@ export default {
     Slideout
   },
   mounted: function() {
-    console.log(this.$children[0].slideout.isOpen());
   },
   methods: {
-    logger: function() {
-      console.log("open event");
-    }
   }
 };
 </script>
 <style>
+@import url(https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap);
+* {
+  font-family: 'Roboto Slab', serif;
+  outline: none;
+}
 body {
   width: 100%;
   height: 100%;
@@ -57,7 +58,7 @@ body {
 }
 
 .slideout-panel {
-  background-color: #29402c;
+  background-color: #212121;
   color: white;
   position: relative;
   z-index: 1;

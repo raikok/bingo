@@ -9,7 +9,7 @@
     <main id="panel">
       <header>
         <div><button class="toggle-button">☰</button>Panel</div>
-        <LetterSelector/>
+        <LetterSelector class="LetterSelector"/>
       </header>
     </main>
   </div>
@@ -33,6 +33,12 @@ export default {
 </script>
 
 <style>
+
+.LetterSelector {
+  display:flex;
+  justify-content: center;
+}
+
 .toggle-button {
   margin-top: 1%;
   margin-left: 1%;
