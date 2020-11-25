@@ -45,7 +45,7 @@ body {
   -webkit-overflow-scrolling: touch;
   z-index: 0;
   display: none;
-  background-color: #1d1f20;
+  background-color: #6d808c;
   color: white;
 }
 

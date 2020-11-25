@@ -10,6 +10,7 @@
       <header>
         <div><button class="toggle-button">☰</button>Panel</div>
         <LetterSelector class="LetterSelector"/>
+        <BingoField/>
       </header>
     </main>
   </div>
@@ -17,6 +18,7 @@
 
 <script>
 import LetterSelector from "@/components/LetterSelector";
+import BingoField from "@/components/BingoField";
 
 export default {
   name: 'hello',
@@ -26,7 +28,8 @@ export default {
     }
   },
   components: {
-    LetterSelector
+    LetterSelector,
+    BingoField
   }
 }
 

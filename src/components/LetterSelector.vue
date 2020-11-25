@@ -3,12 +3,15 @@
     <div class="selector">
       <div class="letters">
         <div v-for="letter in letters" v-bind:key="letter">
-          <div class="selectedLetter" v-if="letter===selected">{{letter}}</div>
+          <div class="selectedLetter" v-if="letter===selectedLetter">{{letter}}</div>
           <div class="unselectedLetter" v-else @click="selectLetter(letter)">{{letter}}</div>
         </div>
 
       </div>
-      <input class="number" type="number">
+      <input id="number" pattern="[0-9]*" class="number" type="number">
+      <div class="vahe"></div>
+      <button class="button" @click="send">SEND</button>
+      <span>{{this.answer}}</span>
     </div>
   </div>
 </template>
@@ -19,7 +22,9 @@ export default {
   data() {
     return {
       letters: ["B", "I", "N", "G", "O"],
-      selected: null
+      selectedLetter: null,
+      selectedSquare: null,
+      answer: null
     }
   },
 
@@ -28,8 +33,18 @@ export default {
       if (letter == null) {
         console.log("selected = null");
       } else {
-        this.selected = letter;
-        console.log("selected = " + letter);
+        this.selectedLetter = letter;
+      }
+    },
+    send : function() {
+      if (this.selectedLetter === null || document.getElementById("number").value === 0) {
+        alert("Vali ka äkki asjad");
+      } else {
+        let input = this.selectedLetter + document.getElementById("number").value;
+        console.log(input);
+        this.selectedLetter = null;
+        this.answer = input;
+        document.getElementById("number").value = '';
       }
     }
   }
@@ -46,15 +61,36 @@ export default {
 }
 
 .number {
-  width: 50%;
+  width: 27%;
+  line-height: 3em;
+  font-size: 200%;
   display: inline-block;
   justify-content: center;
+  margin:auto;
+  background-color: #6d6d6d;
+  color: #bbe2ff;
+  text-shadow: 4px 4px #777777;
 }
 
 .selector {
   display:flex;
   flex-direction: column;
-  flex-grow: 4;
+}
+
+.vahe {
+  height: 10%;
+}
+
+.button {
+  margin: auto;
+  background-color: #6d6d6d;
+  color: #000000;
+  /*text-shadow: 4px 4px #000000;*/
+  box-sizing: content-box;
+  display: inline-block;
+  height: 35px;
+  width: 26%;
+  border-width: 0;
 }
 
 .selectedLetter {
