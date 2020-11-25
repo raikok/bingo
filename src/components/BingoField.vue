@@ -1,45 +1,64 @@
 <template>
   <div>
-    <div v-for="column in field" :key="column">
-      <div v-for="entry in column" :key="entry">
-        <div class="selectedEntry" v-if="entry===selectedEntry">{{entry}}</div>
-        <div class="unselectedEntry" v-else @click="selectEntry(entry)">{{entry}}</div>
+    <div v-for="(column, idx) in field" :key="idx">
+      <div v-for="(entry, idx2) in column" :key="idx2">
+        <div class="selectedEntry" :item="letter" v-if="entry === selectedEntry">{{ letter }}</div>
+        <div class="unselectedEntry" :item="letter" v-else @click="selectEntry(idx, idx2)">{{ letter }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-function fieldInit() {
-  let field = [];
-  for (let i = 0; i < 5; i++) {
-    field[i] = [i];
-  }
-  return field;
-}
 
 export default {
   name: "BingoField",
   data() {
     return {
-      field: fieldInit(),
+      selectedEntryX: 0,
+      selectedEntryY: 0,
       selectedEntry: null
     }
   },
   methods: {
-    selectEntry : function(entry) {
-      if (entry == null) {
+    selectEntry : function(idx, idx2) {
+      if (this.field[idx][idx2] == null) {
         console.log("selected = null");
       } else {
-        this.selectedEntry = entry;
-        console.log(this.selectedEntry);
+        this.$emit("changed", true);
+        this.selectedEntryX = idx2;
+        this.selectedEntryY = idx;
+        this.selectedEntry = this.field[idx][idx2]
       }
     }
+  },
+  props: {
+    field: Array,
+    letter: String
   }
 }
 
 </script>
 
 <style scoped>
+
+.selectedEntry {
+  width: 10px;
+  height: 10px;
+  background-color: #bbe2ff;
+  font-weight: 900;
+  /*color: #ffffff;
+  font-size: 250%;
+  text-shadow: 4px 4px #777777;*/
+}
+
+.unselectedEntry {
+  width: 10px;
+  height: 10px;
+  background-color: #000000;
+  /*color: #6d6d6d;
+  font-size: 250%;
+  text-shadow: 4px 4px #000000;*/
+}
 
 </style>

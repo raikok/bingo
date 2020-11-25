@@ -11,8 +11,8 @@
       <input id="number" pattern="[0-9]*" class="number" type="number">
       <div class="vahe"></div>
       <button class="button" @click="send">SEND</button>
-      <span>{{this.answer}}</span>
     </div>
+
   </div>
 </template>
 
@@ -23,8 +23,7 @@ export default {
     return {
       letters: ["B", "I", "N", "G", "O"],
       selectedLetter: null,
-      selectedSquare: null,
-      answer: null
+      selectedSquare: null
     }
   },
 
@@ -37,21 +36,24 @@ export default {
       }
     },
     send : function() {
-      if (this.selectedLetter === null || document.getElementById("number").value === 0) {
+      console.log(this.changed);
+      if (this.selectedLetter === null || document.getElementById("number").value === 0 || this.changed.fieldNr === -1) {
         alert("Vali ka äkki asjad");
       } else {
         let input = this.selectedLetter + document.getElementById("number").value;
-        console.log(input);
         this.selectedLetter = null;
-        this.answer = input;
         document.getElementById("number").value = '';
+        this.$emit("sendLetter", input);
       }
     }
+  },
+  props: {
+    changed: Object
   }
 }
 </script>
 
-<style scoped>
+<style>
 
 .letters {
   display: flex;
@@ -77,10 +79,6 @@ export default {
   flex-direction: column;
 }
 
-.vahe {
-  height: 10%;
-}
-
 .button {
   margin: auto;
   background-color: #6d6d6d;
@@ -88,7 +86,8 @@ export default {
   /*text-shadow: 4px 4px #000000;*/
   box-sizing: content-box;
   display: inline-block;
-  height: 35px;
+  height: 20px;
+  box-shadow: 1px 2px #888888;
   width: 26%;
   border-width: 0;
 }
