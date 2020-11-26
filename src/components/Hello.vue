@@ -10,14 +10,20 @@
       <header>
         <div><button class="toggle-button">☰</button></div>
         <div class="info" >
-          <info class="entry" v-if="entry">ENTRY MODE</info>
-          <info class="playing" v-else>PLAYING MODE</info>
+          <div class="entry" v-if="entry">ENTRY MODE</div>
+          <div class="playing" v-else>PLAYING MODE</div>
         </div>
-        <LetterSelector @sendLetter="changeField($event)" class="LetterSelector" :changed=selectedSquare />
+        <LetterSelector v-if="entry" @sendLetter="changeField($event)" class="LetterSelector" :changed=selectedSquare :entry=entry />
+        <LetterSelector v-else @sendLetter="checkField($event)" class="LetterSelector" :changed=selectedSquare :entry=entry />
+
         <div class="vahe"></div>
-        <BingoField @changed="changed($event)" class="BingoField" :field=field />
+        <button class="overall-button" @click="addField()">ADD FIELD</button>
+        <div v-for="(field, idx) in fields" v-bind:key="idx">
+          <div class="vahe"></div>
+          <BingoField @changed="changed($event)" class="BingoField" :index=idx :field=field :atmSelected=atmSelected :correctSquares=correctSquares />
+        </div>
         <div class="vahe"></div>
-        <button class="change-mode" @click="changeMode()">CHANGE MODE</button>
+        <button class="overall-button" @click="changeMode()">CHANGE MODE</button>
       </header>
     </main>
   </div>
@@ -27,14 +33,16 @@
 import LetterSelector from "@/components/LetterSelector";
 import BingoField from "@/components/BingoField22";
 
-function fieldInit() {
+function fieldInit(index) {
   let field = [];
   for (let i = 0; i < 5; i++) {
     field[i] = [];
     for (let j = 0; j < 5; j++) {
       field[i][j] = {
-        i: i,
-        j: j
+        fieldNr: index,
+        value: null,
+        x: i,
+        y: j
       };
     }
   }
@@ -47,12 +55,15 @@ export default {
     return {
       selectedSquare: {
         fieldNr: -1,
+        value: null,
         x: 0,
         y: 0
       },
       sendLetter: "",
-      field: fieldInit(),
-      entry: true
+      entry: true,
+      fields: [],
+      correctSquares: [],
+      atmSelected: 0
     }
   },
   components: {
@@ -62,17 +73,40 @@ export default {
   methods: {
     changed : function(evento) {
       this.selectedSquare = evento;
+      this.atmSelected = evento.fieldNr;
     },
     changeField: function(evento) {
       console.log("letter: " + evento);
       if (this.selectedSquare.fieldNr !== -1 && this.entry) {
-        this.field[this.selectedSquare.x][this.selectedSquare.y] = evento;
+        console.log("väljad: " + this.fields);
+        console.log("selectedSquare: " + this.selectedSquare);
+        this.fields[this.selectedSquare.fieldNr][this.selectedSquare.x][this.selectedSquare.y].value = evento;
       }
     },
+
     checkField: function(evento) {
+      console.log("checking...");
       if (this.selectedSquare.fieldNr !== -1 && !this.entry) {
-        this.field[this.selectedSquare.x][this.selectedSquare.y] = evento;
+        let iterable = [...this.fields];
+        iterable.reverse();
+        let iterableLength = iterable.length;
+        for (let i = 0; i < iterableLength; i++) {
+          let field = iterable.pop();
+          for (let j = 0; j < 5; j++) {
+            for (let k = 0; k < 5; k++) {
+              if (field[j][k].value === evento) {
+                console.log("leidis kh");
+                this.correctSquares.push(field[j][k]);
+              }
+            }
+          }
+        }
       }
+    },
+    addField: function() {
+      console.log("adding field");
+      this.fields.push(fieldInit(this.fields.length));
+      console.log(this.fields);
     },
     changeMode: function() {
       this.entry = !this.entry;
@@ -121,7 +155,7 @@ export default {
   width: 5%;
 }
 
-.change-mode {
+.overall-button {
   display: flex;
   justify-content: center;
   margin: auto;

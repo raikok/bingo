@@ -35,7 +35,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-use-v-if-with-v-for": "off",
+      "allowUsingIterationVar": 0
+    }
   },
   "browserslist": [
     "> 1%",

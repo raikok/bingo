@@ -36,9 +36,17 @@ export default {
       }
     },
     send : function() {
-      console.log(this.changed);
-      if (this.selectedLetter === null || document.getElementById("number").value === 0 || this.changed.fieldNr === -1) {
-        alert("Vali ka äkki asjad");
+      console.log("changed: " + this.changed);
+      if (this.entry) {
+        if ((this.selectedLetter === null || document.getElementById("number").value === 0) || this.changed.fieldNr === -1) {
+          alert("Vali ka äkki asjad");
+        }
+        let input = this.selectedLetter + document.getElementById("number").value;
+        this.selectedLetter = null;
+        document.getElementById("number").value = '';
+        this.$emit("sendLetter", input);
+      } else if (this.selectedLetter === null || document.getElementById("number").value === 0) {
+        alert("Sl asjad kirjutamata");
       } else {
         let input = this.selectedLetter + document.getElementById("number").value;
         this.selectedLetter = null;
@@ -48,7 +56,8 @@ export default {
     }
   },
   props: {
-    changed: Object
+    changed: Object,
+    entry: Boolean
   }
 }
 </script>
