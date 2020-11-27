@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <div v-for="(column, idx) in field" :key="idx">
+  <div class="entireField">
+    <div class="vahe"></div>
+    <div v-for="(column, idx) in field" class="field" :key="idx">
       <div v-for="(entry, idx2) in column" :key="idx2">
+        <div v-if="idx === 0" class="letters">
+          <div class="letter">{{letters[idx2]}}</div>
+        </div>
         <div class="selectedEntry" v-if="entry === selectedEntry && atmSelected === index">
           {{ field[idx][idx2].value }}</div>
         <div class="correctEntry" v-else-if="correctSquares.includes(field[idx][idx2])">
@@ -9,7 +13,7 @@
         </div>
         <div class="unselectedEntry" v-else @click="selectEntry(field[idx][idx2])">
           {{ field[idx][idx2].value }}</div>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -21,13 +25,12 @@ export default {
   name: "BingoField",
   data() {
     return {
-      selectedEntry: null
+      selectedEntry: null,
+      letters: ["B", "I", "N", "G", "O"]
     }
   },
   methods: {
     selectEntry : function(objekt) {
-      console.log(this.correctSquares.includes(this.field[0][0]));
-      console.log("------");
       if (objekt === null) {
         console.log("selected = null");
       } else {
@@ -48,10 +51,30 @@ export default {
 
 <style scoped>
 
+.entireField {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.field {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.letters {
+  color: #6d6d6d;
+}
+
 .selectedEntry {
   display:flex;
   justify-content: center;
   padding-top: 35%;
+
+  border-style: solid;
+  border-width: thin;
+  border-color: #6d6d6d;
   width: 50px;
   height: 50px;
   background-color: #bbe2ff;
@@ -67,9 +90,12 @@ export default {
   justify-content: center;
   padding-top: 35%;
 
+  border-style: solid;
+  border-width: thin;
+  border-color: #6d6d6d;
   width: 50px;
   height: 50px;
-  background-color: #000000;
+  background-color: #212121;
   color: #ffffff;
   font-size: 100%;
 }
@@ -79,6 +105,8 @@ export default {
   justify-content: center;
   padding-top: 35%;
 
+  border-style: solid;
+  border-width: thin;
   width: 50px;
   height: 50px;
   background-color: #ff0000;

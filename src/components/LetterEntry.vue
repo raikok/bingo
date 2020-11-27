@@ -1,18 +1,11 @@
 <template>
   <div>
     <div class="selector">
-      <div class="letters">
-        <div v-for="letter in letters" v-bind:key="letter">
-          <div class="selectedLetter" v-if="letter===selectedLetter">{{letter}}</div>
-          <div class="unselectedLetter" v-else @click="selectLetter(letter)">{{letter}}</div>
-        </div>
-
-      </div>
+      <div class="vahe"></div>
       <input id="number" pattern="[0-9]*" class="number" type="number">
       <div class="vahe"></div>
       <button class="button" @click="send">SEND</button>
     </div>
-
   </div>
 </template>
 
@@ -36,11 +29,30 @@ export default {
       }
     },
     send : function() {
-      if (this.selectedLetter === null || document.getElementById("number").value === 0) {
+      console.log("changed");
+      console.log(this.changed);
+      if (document.getElementById("number").value === 0 || this.changed.fieldNr === -1) {
         alert("Sl asjad valimata");
       } else {
-        let input = this.selectedLetter + document.getElementById("number").value;
-        this.selectedLetter = null;
+        let selectedLetter = "";
+        switch (this.changed.y) {
+          case 0:
+            selectedLetter = "B";
+            break;
+          case 1:
+            selectedLetter = "I";
+            break;
+          case 2:
+            selectedLetter = "N";
+            break;
+          case 3:
+            selectedLetter = "G";
+            break;
+          case 4:
+            selectedLetter = "O";
+            break;
+        }
+        let input = selectedLetter + document.getElementById("number").value;
         document.getElementById("number").value = '';
         this.$emit("sendLetter", input);
       }
@@ -48,18 +60,12 @@ export default {
   },
   props: {
     changed: Object,
+    entry: Boolean
   }
 }
 </script>
 
 <style>
-
-.letters {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-}
 
 .number {
   width: 27%;

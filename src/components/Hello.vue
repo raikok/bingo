@@ -3,6 +3,7 @@
     <nav id="menu">
       <div>
         <h1>teko toko</h1>
+        <button class="overall-button" @click="clearEverything()">CLEAR</button>
       </div>
     </nav>
 
@@ -13,8 +14,8 @@
           <div class="entry" v-if="entry">ENTRY MODE</div>
           <div class="playing" v-else>PLAYING MODE</div>
         </div>
-        <LetterSelector v-if="entry" @sendLetter="changeField($event)" class="LetterSelector" :changed=selectedSquare :entry=entry />
-        <LetterSelector v-else @sendLetter="checkField($event)" class="LetterSelector" :changed=selectedSquare :entry=entry />
+        <LetterEntry v-if="entry" @sendLetter="changeField($event)" class="LetterSelector" :changed=selectedSquare />
+        <LetterSelector v-else @sendLetter="checkField($event)" class="LetterSelector" :changed=selectedSquare />
 
         <div class="vahe"></div>
         <button class="overall-button" @click="addField()">ADD FIELD</button>
@@ -24,12 +25,17 @@
         </div>
         <div class="vahe"></div>
         <button class="overall-button" @click="changeMode()">CHANGE MODE</button>
+        <div class="vahe"></div>
+        <div class="vahe"></div>
+        <div class="vahe"></div>
+
       </header>
     </main>
   </div>
 </template>
 
 <script>
+import LetterEntry from "@/components/LetterEntry";
 import LetterSelector from "@/components/LetterSelector";
 import BingoField from "@/components/BingoField22";
 
@@ -49,6 +55,25 @@ function fieldInit(index) {
   return field;
 }
 
+function getFields() {
+  let fields = JSON.parse(localStorage.getItem("gameFields"));
+  if (fields == null) {
+    return [];
+  } else {
+    return fields;
+  }
+}
+
+function getCorrectSquares() {
+  let guessedFields = JSON.parse(localStorage.getItem("guessedFields"));
+  if (guessedFields == null) {
+    return [];
+  } else {
+    return guessedFields;
+  }
+}
+
+
 export default {
   name: 'hello',
   data () {
@@ -61,12 +86,13 @@ export default {
       },
       sendLetter: "",
       entry: true,
-      fields: [],
-      correctSquares: [],
+      fields: getFields(),
+      correctSquares: getCorrectSquares(),
       atmSelected: 0
     }
   },
   components: {
+    LetterEntry,
     LetterSelector,
     BingoField
   },
@@ -76,16 +102,13 @@ export default {
       this.atmSelected = evento.fieldNr;
     },
     changeField: function(evento) {
-      console.log("letter: " + evento);
       if (this.selectedSquare.fieldNr !== -1 && this.entry) {
-        console.log("väljad: " + this.fields);
-        console.log("selectedSquare: " + this.selectedSquare);
         this.fields[this.selectedSquare.fieldNr][this.selectedSquare.x][this.selectedSquare.y].value = evento;
       }
+      this.setCookies();
     },
 
     checkField: function(evento) {
-      console.log("checking...");
       if (this.selectedSquare.fieldNr !== -1 && !this.entry) {
         let iterable = [...this.fields];
         iterable.reverse();
@@ -95,21 +118,28 @@ export default {
           for (let j = 0; j < 5; j++) {
             for (let k = 0; k < 5; k++) {
               if (field[j][k].value === evento) {
-                console.log("leidis kh");
                 this.correctSquares.push(field[j][k]);
               }
             }
           }
         }
       }
+      this.setCookies();
     },
     addField: function() {
-      console.log("adding field");
       this.fields.push(fieldInit(this.fields.length));
-      console.log(this.fields);
     },
     changeMode: function() {
       this.entry = !this.entry;
+    },
+    clearEverything : function() {
+      this.fields = [];
+      this.correctSquares = [];
+      this.setCookies();
+    },
+    setCookies: function() {
+      localStorage.setItem("gameFields", JSON.stringify(this.fields));
+      localStorage.setItem("guessedFields", JSON.stringify(this.correctSquares));
     }
   }
 }
