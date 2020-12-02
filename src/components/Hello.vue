@@ -2,29 +2,27 @@
   <div class="hello">
     <nav id="menu">
       <div>
-        <h1>teko toko</h1>
+        <button class="overall-button" @click="changeMode()">CHANGE MODE</button>
         <button class="overall-button" @click="clearEverything()">CLEAR</button>
+        <History :guessed-fields="correctSquares" @undoCorrect="undoCorrect"/>
       </div>
     </nav>
 
     <main id="panel">
       <header>
         <div><button class="toggle-button">☰</button></div>
-        <div class="info" >
+        <div class="info">
           <div class="entry" v-if="entry">ENTRY MODE</div>
           <div class="playing" v-else>PLAYING MODE</div>
         </div>
         <LetterEntry v-if="entry" @sendLetter="changeField($event)" class="LetterSelector" :changed=selectedSquare />
         <LetterSelector v-else @sendLetter="checkField($event)" class="LetterSelector" :changed=selectedSquare />
 
-        <div class="vahe"></div>
         <button class="overall-button" @click="addField()">ADD FIELD</button>
         <div v-for="(field, idx) in fields" v-bind:key="idx">
           <div class="vahe"></div>
           <BingoField @changed="changed($event)" class="BingoField" :index=idx :field=field :atmSelected=atmSelected :correctSquares=correctSquares />
         </div>
-        <div class="vahe"></div>
-        <button class="overall-button" @click="changeMode()">CHANGE MODE</button>
         <div class="vahe"></div>
         <div class="vahe"></div>
         <div class="vahe"></div>
@@ -37,7 +35,8 @@
 <script>
 import LetterEntry from "@/components/LetterEntry";
 import LetterSelector from "@/components/LetterSelector";
-import BingoField from "@/components/BingoField22";
+import BingoField from "@/components/BingoField";
+import History from "@/components/History";
 
 function fieldInit(index) {
   let field = [];
@@ -65,11 +64,11 @@ function getFields() {
 }
 
 function getCorrectSquares() {
-  let guessedFields = JSON.parse(localStorage.getItem("guessedFields"));
-  if (guessedFields == null) {
+  let correctFields = JSON.parse(localStorage.getItem("correctFields"));
+  if (correctFields == null) {
     return [];
   } else {
-    return guessedFields;
+    return correctFields;
   }
 }
 
@@ -94,7 +93,8 @@ export default {
   components: {
     LetterEntry,
     LetterSelector,
-    BingoField
+    BingoField,
+    History
   },
   methods: {
     changed : function(evento) {
@@ -126,6 +126,10 @@ export default {
       }
       this.setCookies();
     },
+    undoCorrect: function() {
+      this.correctSquares.pop();
+      this.setCookies();
+    },
     addField: function() {
       this.fields.push(fieldInit(this.fields.length));
     },
@@ -137,9 +141,14 @@ export default {
       this.correctSquares = [];
       this.setCookies();
     },
+    reverse: function(array) {
+      array.reverse();
+      return array;
+    },
     setCookies: function() {
       localStorage.setItem("gameFields", JSON.stringify(this.fields));
-      localStorage.setItem("guessedFields", JSON.stringify(this.correctSquares));
+      localStorage.setItem("correctFields", JSON.stringify(this.correctSquares))
+      localStorage.setItem("guessedFields", JSON.stringify(this.guessedSquares));
     }
   }
 }
@@ -188,14 +197,14 @@ export default {
 .overall-button {
   display: flex;
   justify-content: center;
-  margin: auto;
   background-color: #6d6d6d;
   color: #000000;
   /*text-shadow: 4px 4px #000000;*/
   box-sizing: content-box;
-  height: 20px;
+  height: auto;
   box-shadow: 1px 2px #888888;
   width: 26%;
+  margin: 1.25rem auto auto;
   border-width: 0;
 }
 

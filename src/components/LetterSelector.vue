@@ -37,7 +37,7 @@ export default {
     },
     send : function() {
       if (this.selectedLetter === null || document.getElementById("number").value === 0) {
-        alert("Sl asjad valimata");
+        alert("Sul on jäänud mõned lahtrid valimata (Täht, number või lahter kuhu sisestad)");
       } else {
         let input = this.selectedLetter + document.getElementById("number").value;
         this.selectedLetter = null;

@@ -29,10 +29,8 @@ export default {
       }
     },
     send : function() {
-      console.log("changed");
-      console.log(this.changed);
       if (document.getElementById("number").value === 0 || this.changed.fieldNr === -1) {
-        alert("Sl asjad valimata");
+        alert("Sul on jäänud mõned lahtrid valimata (Number või lahter kuhu sisestad)");
       } else {
         let selectedLetter = "";
         switch (this.changed.y) {
